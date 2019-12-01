@@ -5,7 +5,6 @@ resources:
   source:
     branch: master
     uri: git@github.com:EngineerBetter/credhub-resource.git
-    ignore_paths: [ci/*]
     private_key: ((github_private_key))
 
 jobs:
