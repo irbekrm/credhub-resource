@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/cloudfoundry-community/credhub-resource/concourse"
-	"github.com/cloudfoundry-community/credhub-resource/credhub"
+	"github.com/EngineerBetter/credhub-resource/concourse"
+	"github.com/EngineerBetter/credhub-resource/credhub"
 )
 
 type CheckCommand struct {

@@ -6,9 +6,9 @@ import (
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials"
 
-	"github.com/cloudfoundry-community/credhub-resource/check"
-	"github.com/cloudfoundry-community/credhub-resource/concourse"
-	"github.com/cloudfoundry-community/credhub-resource/credhub/credhubfakes"
+	"github.com/EngineerBetter/credhub-resource/check"
+	"github.com/EngineerBetter/credhub-resource/concourse"
+	"github.com/EngineerBetter/credhub-resource/credhub/credhubfakes"
 )
 
 var _ = Describe("CheckCommand", func() {

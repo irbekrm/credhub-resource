@@ -5,8 +5,8 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/cloudfoundry-community/credhub-resource/concourse"
-	"github.com/cloudfoundry-community/credhub-resource/credhub"
+	"github.com/EngineerBetter/credhub-resource/concourse"
+	"github.com/EngineerBetter/credhub-resource/credhub"
 )
 
 type InCommand struct {

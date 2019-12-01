@@ -9,8 +9,8 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/auth"
 
-	"github.com/cloudfoundry-community/credhub-resource/concourse"
-	"github.com/cloudfoundry-community/credhub-resource/out"
+	"github.com/EngineerBetter/credhub-resource/concourse"
+	"github.com/EngineerBetter/credhub-resource/out"
 )
 
 func main() {
