@@ -1,12 +1,30 @@
 ---
+anchors:
+  git_credhub_resource: &git_credhub_resource
+    uri: git@github.com:EngineerBetter/credhub-resource.git
+    private_key: ((github_private_key))
+
 resources:
 - name: credhub_resource
   type: git
   source:
     branch: master
-    uri: git@github.com:EngineerBetter/credhub-resource.git
-    private_key: ((github_private_key))
+    <<: *git_credhub_resource
+- name: credhub_resource_version
+  type: semver
+  source:
+    driver: git
+    branch: version
+    file: version
+    <<: *git_credhub_resource
 
+- name: credhub_resource_image
+  type: docker-image
+  source:
+    username: ((dockerhub_user))
+    password: ((dockerhub_password))
+    repository:  engineerbetter/concourse-credhub-resource
+  
 jobs:
 - name: test
   plan:
@@ -20,8 +38,19 @@ jobs:
 - name: rc
   serial_groups: [version]
   plan:
-  - get: credhub_resource
-    passed: [test]
-    trigger: true
+  - in_parallel:
+    - get: credhub_resource
+      passed: [test]
+      trigger: true
+    - get: credhub_resource_version
+      params: {pre: alpha}
   - task: build
     file: credhub_resource/ci/tasks/build.yml
+  - put: credhub_resource_image
+    params:
+      build: built-binaries
+      tag_file: credhub_resource_version/version
+      tag_prefix: v
+  - put: credhub_resource_version
+    params: {file: credhub_resource_version/version}
+    get_params: {skip_download: true}
