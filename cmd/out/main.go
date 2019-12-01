@@ -44,6 +44,12 @@ func main() {
 			outRequest.Source.Password,
 		)),
 	)
+
+	if err != nil {
+		fmt.Fprint(os.Stderr, err)
+		os.Exit(1)
+	}
+
 	outCommand := out.NewOutCommand(client, sourcesDir)
 	outResponse, err := outCommand.Run(outRequest)
 	if err != nil {

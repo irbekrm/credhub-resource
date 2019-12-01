@@ -2,10 +2,9 @@ package out
 
 import (
 	"encoding/json"
-	"sort"
-
 	"github.com/EngineerBetter/credhub-resource/concourse"
 	"github.com/EngineerBetter/credhub-resource/credhub"
+	"sort"
 )
 
 type OutResponse struct {
@@ -42,7 +41,7 @@ func (c OutCommand) Run(outRequest concourse.OutRequest) (OutResponse, error) {
 
 	concourseOutput := OutResponse{
 		Version:  version,
-		Metadata: append([]concourse.Metadata{}),
+		Metadata: []concourse.Metadata{},
 	}
 
 	return concourseOutput, nil

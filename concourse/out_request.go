@@ -16,7 +16,7 @@ type OutRequest struct {
 func NewOutRequest(request []byte, sourcesDir string) (OutRequest, error) {
 	var outRequest OutRequest
 	if err := json.NewDecoder(bytes.NewReader(request)).Decode(&outRequest); err != nil {
-		return OutRequest{}, fmt.Errorf("Invalid parameters: %s\n", err)
+		return OutRequest{}, fmt.Errorf("invalid parameters: %s", err)
 	}
 
 	dynamicSource, err := NewSource(request, sourcesDir)
