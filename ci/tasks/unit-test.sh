@@ -2,6 +2,6 @@
 
 set -euox
 
-cd credhub-resource
+cd credhub_resource
 
 go test ./...

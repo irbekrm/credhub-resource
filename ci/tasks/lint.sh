@@ -2,12 +2,11 @@
 
 set -eux
 
-yes | apt-get install shellcheck
-
 # Installs golangci-lint https://github.com/golangci/golangci-lint
+export BINDIR=/usr/local/bin
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.21.0
 
-cd credhub-resource
+cd credhub_resource
 
 # Runs recursively
 golangci-lint run --skip-dirs-use-default -E stylecheck -E bodyclose -E dupl -E gochecknoglobals -E gochecknoinits -E goconst
