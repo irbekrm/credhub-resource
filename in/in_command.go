@@ -37,11 +37,11 @@ func (c InCommand) Run(inRequest concourse.InRequest, targetDir string) (InRespo
 	actualVersion := concourse.NewVersion(raw, inRequest.Source.Server)
 
 	if actualVersion.Server != inRequest.Version.Server {
-		return InResponse{}, errors.New("Credhub server is different than configured source")
+		return InResponse{}, errors.New("credhub server is different than configured source")
 	}
 
 	if actualVersion.CredentialsSha1 != inRequest.Version.CredentialsSha1 {
-		return InResponse{}, errors.New("Credhub credentials fingerprint can used as input")
+		return InResponse{}, errors.New("credhub credentials fingerprint can used as input")
 	}
 
 	return InResponse{Version: actualVersion}, nil

@@ -12,6 +12,8 @@ jobs:
   plan:
   - get: credhub-resource
     trigger: true
+  - task: lint
+    file: credhub-resource/ci/tasks/lint.yml
   - task: unit-test
     file: credhub-resource/ci/tasks/unit-test.yml
 

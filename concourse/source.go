@@ -23,7 +23,7 @@ type sourceRequest struct {
 func NewSource(config []byte, sourcesDir string) (Source, error) {
 	var sourceRequest sourceRequest
 	if err := json.NewDecoder(bytes.NewReader(config)).Decode(&sourceRequest); err != nil {
-		return Source{}, fmt.Errorf("Invalid dynamic source config: %s", err)
+		return Source{}, fmt.Errorf("invalid dynamic source config: %s", err)
 	}
 
 	if err := checkRequiredSourceParameters(sourceRequest.Source); err != nil {

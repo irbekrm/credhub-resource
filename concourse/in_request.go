@@ -17,7 +17,7 @@ type InRequest struct {
 func NewInRequest(request []byte) (InRequest, error) {
 	var inRequest InRequest
 	if err := json.NewDecoder(bytes.NewReader(request)).Decode(&inRequest); err != nil {
-		return InRequest{}, fmt.Errorf("Invalid parameters: %s\n", err)
+		return InRequest{}, fmt.Errorf("invalid parameters: %s", err)
 	}
 
 	if inRequest.Source.Server == "" {
