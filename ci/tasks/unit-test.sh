@@ -1,11 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
-set -e
+set -euox
 
-export GOPATH="${PWD}/gopath"
-export PATH="${GOPATH}/bin:${PATH}"
-go get github.com/onsi/ginkgo/ginkgo
+cd credhub-resource
 
-cd gopath/src/github.com/cloudfoundry-community/credhub-resource
-
-ginkgo -r -race -p -randomizeAllSpecs -randomizeSuites .
+go test ./...

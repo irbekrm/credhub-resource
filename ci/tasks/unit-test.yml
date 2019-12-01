@@ -8,9 +8,7 @@ image_resource:
     tag: 1.11
 
 inputs:
-- name: credhub-resource-ci
 - name: credhub-resource
-  path: gopath/src/github.com/cloudfoundry-community/credhub-resource
 
 run:
-  path: credhub-resource-ci/ci/tasks/unit-test.sh
+  path: credhub-resource/ci/tasks/unit-test.sh

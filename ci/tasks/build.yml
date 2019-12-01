@@ -8,12 +8,10 @@ image_resource:
     tag: 1.11
 
 inputs:
-- name: credhub-resource-ci
 - name: credhub-resource
-  path: gopath/src/github.com/cloudfoundry-community/credhub-resource
 
 outputs:
 - name: built-binaries
 
 run:
-  path: credhub-resource-ci/ci/tasks/build.sh
+  path: credhub-resource/ci/tasks/build.sh
