@@ -3,6 +3,30 @@ anchors:
   git_credhub_resource: &git_credhub_resource
     uri: git@github.com:EngineerBetter/credhub-resource.git
     private_key: ((github_private_key))
+  systest_gets: &systest_gets
+  - get: credhub_resource
+    passed: [rc]
+    trigger: true
+  - get: postgres_bosh_release
+  - get: credhub_cli
+    params:
+      globs:
+      - credhub-linux-*
+  - get: fly_cli
+    params:
+      globs:
+      - fly-*-linux-amd64.tgz
+  - get: bpm_bosh_release
+  - get: concourse_bosh_release
+  - get: xenial_stemcell
+  - get: credhub_resource_version
+    passed: [rc]
+
+resource_types:
+- name: concourse-pipeline
+  type: docker-image
+  source:
+    repository: concourse/concourse-pipeline-resource
 
 resources:
 - name: credhub_resource
@@ -10,6 +34,7 @@ resources:
   source:
     branch: master
     <<: *git_credhub_resource
+
 - name: credhub_resource_version
   type: semver
   source:
@@ -24,33 +49,97 @@ resources:
     username: ((dockerhub_user))
     password: ((dockerhub_password))
     repository:  engineerbetter/concourse-credhub-resource
-  
+
+- name: this_concourse
+  type: concourse-pipeline
+  source:
+    target: ((this_concourse.url))
+    insecure: "false"
+    teams:
+    - name: ((this_concourse.team))
+      username: ((this_concourse.user))
+      password: ((this_concourse.password))
+
+- name: concourse_bosh_release
+  type: bosh-io-release
+  source:
+    repository: concourse/concourse-bosh-release
+
+- name: postgres_bosh_release
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry/postgres-release
+
+- name: bpm_bosh_release
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry/bpm-release
+
+- name: xenial_stemcell
+  type: bosh-io-stemcell
+  source:
+    name: bosh-warden-boshlite-ubuntu-xenial-go_agent
+
+- name: credhub_cli
+  type: github-release
+  source:
+    owner: cloudfoundry-incubator
+    repository: credhub-cli
+    access_token: ((github_access_token))
+
+- name: fly_cli
+  type: github-release
+  source:
+    owner: concourse
+    repository: concourse
+    access_token: ((github_access_token))
+
 jobs:
-- name: test
+- name: set_pipeline
+  plan:
+  - in_parallel:
+    - get: this_concourse
+    - get: credhub_resource
+      trigger: true
+  - put: this_concourse
+    params:
+      pipelines:
+      - name: concourse_credhub_resource
+        team: ((this_concourse.team))
+        config_file: credhub_resource/ci/pipeline.yml
+
+- name: unit_test
   plan:
   - get: credhub_resource
+    passed: [set_pipeline]
     trigger: true
   - task: lint
-    file: credhub_resource/ci/tasks/lint.yml
+    file: credhub_resource/ci/tasks/lint/task.yml
   - task: unit-test
-    file: credhub_resource/ci/tasks/unit-test.yml
+    file: credhub_resource/ci/tasks/unit_test/task.yml
 
 - name: rc
   serial_groups: [version]
   plan:
   - in_parallel:
     - get: credhub_resource
-      passed: [test]
+      passed: [unit_test]
       trigger: true
     - get: credhub_resource_version
       params: {pre: alpha}
   - task: build
-    file: credhub_resource/ci/tasks/build.yml
+    file: credhub_resource/ci/tasks/build/task.yml
   - put: credhub_resource_image
     params:
       build: built-binaries
       tag_file: credhub_resource_version/version
-      tag_prefix: v
+    get_params: {skip_download: true}
   - put: credhub_resource_version
     params: {file: credhub_resource_version/version}
-    get_params: {skip_download: true}
+      
+- name: systest_get_credential
+  plan:
+  - in_parallel: *systest_gets
+  - task: systest_get_credential
+    privileged: true
+    file: credhub_resource/ci/tasks/systest_get_credential/task.yml

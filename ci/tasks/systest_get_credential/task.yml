@@ -1,0 +1,20 @@
+---
+  platform: linux
+  
+  image_resource:
+    type: registry-image
+    source:
+      repository: bosh/main-bosh-docker
+  
+  inputs:
+  - name: credhub_resource
+  - name: credhub_resource_version
+  - name: credhub_cli
+  - name: concourse_bosh_release
+  - name: postgres_bosh_release
+  - name: bpm_bosh_release
+  - name: xenial_stemcell
+  - name: fly_cli
+  
+  run:
+    path: credhub_resource/ci/tasks/systest_get_credential/task.sh  

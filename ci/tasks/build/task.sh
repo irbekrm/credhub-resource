@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+set -euox pipefail
 
 export BUILT_BINARIES_DIR=$PWD/built-binaries
 

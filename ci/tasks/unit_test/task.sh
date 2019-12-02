@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euox
+set -euox pipefail
 
 cd credhub_resource
 

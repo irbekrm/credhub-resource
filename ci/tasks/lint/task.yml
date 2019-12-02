@@ -10,8 +10,5 @@ image_resource:
 inputs:
 - name: credhub_resource
 
-outputs:
-- name: built-binaries
-
 run:
-  path: credhub_resource/ci/tasks/build.sh
+  path: credhub_resource/ci/tasks/lint/task.sh

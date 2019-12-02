@@ -11,4 +11,4 @@ inputs:
 - name: credhub_resource
 
 run:
-  path: credhub_resource/ci/tasks/unit-test.sh
+  path: credhub_resource/ci/tasks/unit_test/task.sh
