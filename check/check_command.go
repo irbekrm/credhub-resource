@@ -1,9 +1,6 @@
 package check
 
 import (
-	"encoding/json"
-	"sort"
-
 	"github.com/EngineerBetter/credhub-resource/concourse"
 	"github.com/EngineerBetter/credhub-resource/credhub"
 )
@@ -17,24 +14,16 @@ func NewCheckCommand(client credhub.CredHub) CheckCommand {
 }
 
 func (c CheckCommand) Run(checkRequest concourse.CheckRequest) ([]concourse.Version, error) {
-	credentials, err := c.client.FindByPath(checkRequest.Source.Path)
+	latest, err := c.client.GetLatestVersion(checkRequest.Source.Path)
+
 	if err != nil {
-		return []concourse.Version{}, err
-	}
-	sort.Slice(credentials.Credentials, func(i, j int) bool {
-		return credentials.Credentials[i].Name < credentials.Credentials[j].Name
-	})
-	raw, err := json.Marshal(credentials)
-	if err != nil {
-		return []concourse.Version{}, err
+		return []concourse.Version{concourse.Version{}}, err
 	}
 
-	version := concourse.NewVersion(raw, checkRequest.Source.Server)
-
-	var concourseOutput = []concourse.Version{}
-	if version != checkRequest.Version {
-		concourseOutput = append(concourseOutput, version)
+	version := concourse.Version{
+		ID: latest.Metadata.Id, 
+		Server: checkRequest.Source.Server,
 	}
 
-	return concourseOutput, nil
+	return []concourse.Version{version}, nil
 }

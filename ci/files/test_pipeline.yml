@@ -20,15 +20,23 @@ jobs:
 - name: test
   plan:
   - get: test_secret
+    trigger: ((trigger))
   - task: test
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: alpine
+          repository: engineerbetter/pcf-ops
       inputs:
       - name: test_secret
       run:
-        path: ls
-        args: [-lR]  
+        path: bash
+        args:
+        - -euxc
+        - |
+          # Test if the value is as expected, fail if it is not
+          cat test_secret/value | jq -r \
+            --arg expectedValue ((expected_value)) \
+            --exit-status \
+            '. == $expectedValue'

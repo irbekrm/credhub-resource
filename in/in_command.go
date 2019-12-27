@@ -3,7 +3,8 @@ package in
 import (
 	"encoding/json"
 	"errors"
-	"sort"
+	"fmt"
+	"io/ioutil"
 
 	"github.com/EngineerBetter/credhub-resource/concourse"
 	"github.com/EngineerBetter/credhub-resource/credhub"
@@ -14,7 +15,8 @@ type InCommand struct {
 }
 
 type InResponse struct {
-	Version concourse.Version `json:"version"`
+	Version  concourse.Version    `json:"version"`
+	Metadata []concourse.Metadata `json:"metadata"`
 }
 
 func NewInCommand(client credhub.CredHub) InCommand {
@@ -22,27 +24,54 @@ func NewInCommand(client credhub.CredHub) InCommand {
 }
 
 func (c InCommand) Run(inRequest concourse.InRequest, targetDir string) (InResponse, error) {
-	credentials, err := c.client.FindByPath(inRequest.Source.Path)
+	credential, err := c.client.GetById(inRequest.Version.ID)
 	if err != nil {
 		return InResponse{}, err
 	}
-	sort.Slice(credentials.Credentials, func(i, j int) bool {
-		return credentials.Credentials[i].Name < credentials.Credentials[j].Name
-	})
-	raw, err := json.Marshal(credentials)
+	valueToBytes, err := json.Marshal(credential.Value)
+	if err != nil {
+		return InResponse{}, err
+	}
+	err = createFile("value", targetDir, valueToBytes)
 	if err != nil {
 		return InResponse{}, err
 	}
 
-	actualVersion := concourse.NewVersion(raw, inRequest.Source.Server)
+	err = createFile("created_at", targetDir, []byte(credential.Metadata.Base.VersionCreatedAt))
+	if err != nil {
+		return InResponse{}, err
+	}
+
+	err = createFile("type", targetDir, []byte(credential.Metadata.Type))
+	if err != nil {
+		return InResponse{}, err
+	}
+
+	err = createFile("id", targetDir, []byte(credential.Metadata.Id))
+	if err != nil {
+		return InResponse{}, err
+	}
+
+	actualVersion := concourse.Version{
+		ID:     credential.Metadata.Id,
+		Server: inRequest.Source.Server,
+	}
+
+	metadata := concourse.Metadata{
+		ID:               credential.Metadata.Id,
+		VersionCreatedAt: credential.Metadata.Base.VersionCreatedAt,
+		Type:             credential.Metadata.Type,
+	}
 
 	if actualVersion.Server != inRequest.Version.Server {
 		return InResponse{}, errors.New("credhub server is different than configured source")
 	}
 
-	if actualVersion.CredentialsSha1 != inRequest.Version.CredentialsSha1 {
-		return InResponse{}, errors.New("credhub credentials fingerprint can used as input")
-	}
+	return InResponse{Version: actualVersion, Metadata: []concourse.Metadata{metadata}}, nil
+}
 
-	return InResponse{Version: actualVersion}, nil
+func createFile(filename, targetDir string, data []byte) error {
+	filepath := fmt.Sprintf("%s/%s", targetDir, filename)
+	err := ioutil.WriteFile(filepath, data, 0644)
+	return err
 }

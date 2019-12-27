@@ -23,6 +23,7 @@ credhub_client="credhub-admin"
 credhub_secret="$(bosh int /tmp/local-bosh/director/creds.yml --path=/credhub_admin_client_secret)"
 credhub_server="https://${bosh_ip}:8844"
 secret_path="/foo/bar"
+secret="test_secret"
 
 credhub api "${credhub_server}" --skip-tls-validation
 
@@ -31,7 +32,7 @@ credhub login \
   --client-secret="${credhub_secret}" \
   --skip-tls-validation
 
-credhub set -n "${secret_path}" -t value -v test_value
+credhub set -n "${secret_path}" -t value -v "${secret}"
 
 ### DEPLOY CONCOURSE ###
 # Upload xenial stemcell
@@ -69,6 +70,8 @@ fly -t test set-pipeline \
   --var=client_name="${credhub_client}" \
   --var=client_secret="${credhub_secret}" \
   --var=secret_path="${secret_path}" \
+  --yaml-var=trigger=false \
+  --var=expected_value="${secret}" \
   --var=credhub_resource_tag="$(cat credhub_resource_version/version)" \
   --check-creds \
   --non-interactive

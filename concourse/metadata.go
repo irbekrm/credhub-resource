@@ -1,6 +1,7 @@
 package concourse
 
 type Metadata struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
+	ID               string `json:"id"`
+	VersionCreatedAt string `json:"version_created_at"`
+	Type             string `json:"type"`
 }
