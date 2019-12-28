@@ -27,7 +27,7 @@ func (c OutCommand) Run(outRequest concourse.OutRequest) (OutResponse, error) {
 		Version:  concourse.Version{},
 		Metadata: []concourse.Metadata{},
 	}
-	latest, err := c.client.GetLatestVersion(outRequest.Source.Path)
+	latest, err := c.client.GetLatestVersion(outRequest.Source.Name)
 	if err != nil {
 		return concourseOutput, err
 	}

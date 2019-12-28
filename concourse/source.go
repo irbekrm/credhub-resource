@@ -10,9 +10,9 @@ import (
 
 type Source struct {
 	Server            string `json:"server,omitempty" yaml:"server"`
-	Username          string `json:"username,omitempty" yaml:"username"`
-	Password          string `json:"password,omitempty" yaml:"password"`
-	Path              string `json:"path,omitempty" yaml:"path"`
+	ClientName        string `json:"client_name,omitempty" yaml:"client_name"`
+	ClientSecret      string `json:"client_secret,omitempty" yaml:"client_secret"`
+	Name              string `json:"name,omitempty" yaml:"name"`
 	SkipTLSValidation bool   `json:"skip_tls_validation,omitempty" yaml:"skip_tls_validation"`
 }
 
@@ -39,11 +39,11 @@ func checkRequiredSourceParameters(source Source) error {
 	if source.Server == "" {
 		missingParameters = append(missingParameters, "server")
 	}
-	if source.Username == "" {
-		missingParameters = append(missingParameters, "username")
+	if source.ClientName == "" {
+		missingParameters = append(missingParameters, "client_name")
 	}
-	if source.Password == "" {
-		missingParameters = append(missingParameters, "password")
+	if source.ClientSecret == "" {
+		missingParameters = append(missingParameters, "client_secret")
 	}
 
 	if len(missingParameters) > 0 {

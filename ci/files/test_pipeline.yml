@@ -11,9 +11,9 @@ resources:
   type: credhub_resource
   source:
     server: ((credhub_server))
-    username: ((client_name))
-    password: ((client_secret))
-    path: ((secret_path))
+    client_name: ((client_name))
+    client_secret: ((client_secret))
+    name: ((secret_path))
     skip_tls_validation: true
 
 jobs:

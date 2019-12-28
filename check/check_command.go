@@ -14,14 +14,14 @@ func NewCheckCommand(client credhub.CredHub) CheckCommand {
 }
 
 func (c CheckCommand) Run(checkRequest concourse.CheckRequest) ([]concourse.Version, error) {
-	latest, err := c.client.GetLatestVersion(checkRequest.Source.Path)
+	latest, err := c.client.GetLatestVersion(checkRequest.Source.Name)
 
 	if err != nil {
 		return []concourse.Version{concourse.Version{}}, err
 	}
 
 	version := concourse.Version{
-		ID: latest.Metadata.Id, 
+		ID:     latest.Metadata.Id,
 		Server: checkRequest.Source.Server,
 	}
 

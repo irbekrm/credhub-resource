@@ -30,8 +30,8 @@ func main() {
 		checkRequest.Source.Server,
 		credhub.SkipTLSValidation(checkRequest.Source.SkipTLSValidation),
 		credhub.Auth(auth.UaaClientCredentials(
-			checkRequest.Source.Username,
-			checkRequest.Source.Password,
+			checkRequest.Source.ClientName,
+			checkRequest.Source.ClientSecret,
 		)),
 	)
 	if err != nil {

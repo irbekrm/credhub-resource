@@ -11,8 +11,8 @@ var _ = Describe("NewSource", func() {
 		config := []byte(`{
 			"source": {
 				"server": "foo.example.com",
-				"username": "foo-user",
-				"password": "foo-pass",
+				"client_name": "foo-user",
+				"client_secret": "foo-pass",
 				"skip_tls_validation": false
 			}
 		}`)
@@ -22,8 +22,8 @@ var _ = Describe("NewSource", func() {
 
 		Expect(source).To(Equal(concourse.Source{
 			Server:            "foo.example.com",
-			Username:          "foo-user",
-			Password:          "foo-pass",
+			ClientName:        "foo-user",
+			ClientSecret:      "foo-pass",
 			SkipTLSValidation: false,
 		}))
 	})
@@ -45,8 +45,8 @@ var _ = Describe("NewSource", func() {
 			Expect(err).To(HaveOccurred())
 
 			Expect(err.Error()).To(ContainSubstring("server"))
-			Expect(err.Error()).To(ContainSubstring("username"))
-			Expect(err.Error()).To(ContainSubstring("password"))
+			Expect(err.Error()).To(ContainSubstring("client_name"))
+			Expect(err.Error()).To(ContainSubstring("client_secret"))
 		})
 	})
 })

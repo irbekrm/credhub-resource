@@ -17,9 +17,9 @@ resource_types:
 ## Source Configuration
 
 * `server`: *Required.* The address of the Credhub server
-* `username`: *Required.* The UAA client ID for authorizing with Credhub.
-* `password`: *Required.* The UAA client secret for authorizing with Credhub.
-* `path`: *Optional.* The Credhub path which needs to be watched.
+* `client_name`: *Required.* The UAA client ID for authorizing with Credhub.
+* `client_secret`: *Required.* The UAA client secret for authorizing with Credhub.
+* `name`: *Optional.* The credential name to be retrieved.
 * `skip_tls_validation`: *Optional.* Skip TLS validation for connections to Credhub and UAA.
 
 ### Example
@@ -29,9 +29,9 @@ resource_types:
   type: credhub
   source:
     server: https://credhub.example.com
-    username: admin
-    password: admin
-    path: /bosh/cf/
+    client_name : admin
+    client_secret: admin
+    name: /bosh/cf/
     skip_tls_validation: true
 ```
 
