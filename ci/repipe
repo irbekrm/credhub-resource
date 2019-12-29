@@ -1,2 +1,0 @@
-#!/bin/bash
-fly -t ci2 set-pipeline -p credhub-resource -c ./ci/pipeline.yml
