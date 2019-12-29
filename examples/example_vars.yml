@@ -1,0 +1,3 @@
+credhub_server: <your-credhub-server>
+client_name: <credhub-client-name>
+client_secret: <credhub-client-secret>
