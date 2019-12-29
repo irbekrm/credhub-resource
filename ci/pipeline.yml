@@ -21,6 +21,8 @@ anchors:
   - get: xenial_stemcell
   - get: credhub_resource_version
     passed: [rc]
+  - get: credhub_resource_image
+    passed: [rc]
 
 resource_types:
 - name: concourse-pipeline
@@ -133,7 +135,6 @@ jobs:
     params:
       build: built-binaries
       tag_file: credhub_resource_version/version
-    get_params: {skip_download: true}
   - put: credhub_resource_version
     params: {file: credhub_resource_version/version}
       
@@ -143,3 +144,26 @@ jobs:
   - task: systest_get_credential
     privileged: true
     file: credhub_resource/ci/tasks/systest_get_credential/task.yml
+
+- name: promote_image
+  serial_groups: [version]
+  plan:
+  - in_parallel:
+    - get: credhub_resource_version
+      passed: [systest_get_credential]
+      trigger: true
+      params:
+        bump: final
+    - get: credhub_resource_image
+      passed: [systest_get_credential]
+      params:
+        save: true
+  - put: credhub_resource_image
+    params:
+      load: credhub_resource_image
+      tag_file: credhub_resource_version/version
+      tag_as_latest: true
+    get_params: {skip_download: true}
+  - put: credhub_resource_version
+    params:
+      bump: patch
