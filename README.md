@@ -48,8 +48,6 @@ A new CredHub ID is generated every time the credential is set, even if its valu
 
 Retrieves the credential by the ID that `check` fetched and writes it to `value` file in the destination directory.
 
-### `out` Not implemented
-
 #### Files populated
 
 * `value` Credential value in plain text. Credentials of type `value` and `password` will be stored as a simple JSON string. Credentials of type `json` will be stored as a JSON object or array depending on what the value is.
@@ -59,6 +57,8 @@ Retrieves the credential by the ID that `check` fetched and writes it to `value`
 * `type` [CredHub credential type](https://docs.cloudfoundry.org/credhub/credential-types.html)
 
 * `id` [CredHub credential id](https://credhub-api.cfapps.io/version/2.5/#_credential_ids)
+
+### `out` Not implemented
 
 ### Usage example
 
